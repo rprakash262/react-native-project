@@ -6,6 +6,8 @@ import {ACTIONS} from '../reducers/TestReducer';
 
 const initVars = ['apiData'];
 
+export const TestContext = React.createContext();
+
 class TestProvider extends React.Component {
   componentDidMount() {
     this.resetState(this.props);
@@ -33,7 +35,7 @@ class TestProvider extends React.Component {
   };
 
   render() {
-    const {children, workableWidth, isLoadingData, pageProps} = this.props;
+    const {children, pageProps} = this.props;
 
     const pageActions = {};
 
@@ -42,15 +44,17 @@ class TestProvider extends React.Component {
     });
 
     const childProps = {
-      workableWidth,
-      isLoadingData,
       pageProps,
       pageActions,
     };
 
-    return React.isValidElement(children)
-      ? React.cloneElement(children, childProps) // element as children
-      : React.createElement(children, childProps);
+    const x = Object.assign({}, pageProps, pageActions);
+
+    // return React.isValidElement(children)
+    //   ? React.cloneElement(children, childProps) // element as children
+    //   : React.createElement(children, childProps);
+
+    return <TestContext.Provider value={x}>{children}</TestContext.Provider>;
   }
 }
 
